@@ -1,0 +1,147 @@
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.Color;
+import org.openqa.selenium.support.ui.*;
+
+import static java.lang.Thread.sleep;
+
+
+public class FirstTest {
+
+    @Test
+
+    public void logIn() throws InterruptedException {
+
+        WebDriver driver = new ChromeDriver();
+
+        driver.manage().window().maximize();
+
+        driver.get("https://www.saucedemo.com/?fbclid=IwAR0Sxb6pTlgFAYMZXTC1Iy7ue9t0h10cCZLnYnNafZieIMA_6g9LKQUADKg");
+
+        By userName = By.id("user-name");
+
+        By passWord = By.id("password");
+
+        By button = By.className("inventory_item_name");
+
+        By selector = By.className("product_sort_container");
+
+        By burgerButton = By.id("react-burger-menu-btn");
+
+
+
+        String userText = "standard_user";
+        String passText = "secret_sauce";
+        String productName = "Sauce Labs Backpack";
+
+
+        WebElement user = driver.findElement(userName);
+        user.sendKeys(userText);
+
+        driver.findElement(passWord).sendKeys(passText);
+        driver.findElement(passWord).sendKeys(Keys.ENTER);
+
+
+        driver.findElement(By.id("add-to-cart-sauce-labs-backpack")).click();
+        sleep(3000);
+
+        driver.findElement(By.id("add-to-cart-test.allthethings()-t-shirt-(red)")).click();
+        sleep(3000);
+
+
+        String actualProductName = driver.findElement(button).getText();
+        sleep(3000);
+
+
+        driver.findElement(By.className("shopping_cart_link")).click();
+        sleep(3000);
+
+        driver.findElement(By.id("checkout")).click();
+        sleep(3000);
+
+        driver.findElement(By.id("first-name")).sendKeys("ნიკოლოზ");
+        sleep(3000);
+
+        driver.findElement(By.id("last-name")).sendKeys("ბედინაშვილი");
+        sleep(3000);
+
+        driver.findElement(By.id("postal-code")).sendKeys("0183");
+        sleep(3000);
+
+        driver.findElement(By.id("cancel")).click();
+        sleep(3000);
+
+        driver.findElement(By.id("continue-shopping")).click();
+
+        sleep(3000);
+
+        driver.findElement(selector).click();
+
+        Select selectMenu = new Select(driver.findElement(selector));
+        int selectCount = selectMenu.getOptions().size();
+
+
+        for (int i = 0; i < selectCount; i++) {
+            selectMenu.selectByIndex(i);
+            i++;
+
+
+        }
+
+        driver.findElement(burgerButton).click();
+        driver.findElement(By.id("logout_sidebar_link")).click();
+
+
+        sleep(5000);
+
+
+        driver.close();
+
+
+    }
+
+
+    @Test
+    public void logInWithIncorrectUser () throws InterruptedException {
+        WebDriver driver = new ChromeDriver();
+
+        driver.manage().window().maximize();
+
+        driver.get("https://www.saucedemo.com/?fbclid=IwAR0Sxb6pTlgFAYMZXTC1Iy7ue9t0h10cCZLnYnNafZieIMA_6g9LKQUADKg");
+
+        By user = By.id("user-name");
+        By password = By.id("password");
+
+        driver.findElement(user).sendKeys("locked_out_user");
+        driver.findElement(password).sendKeys("secret_sauce");
+        driver.findElement(password).sendKeys(Keys.ENTER);
+
+        //driver.findElement(By.className("error-message-container error"));
+
+        String expectedBorderColor ="#e2231a";
+
+         WebElement color = driver.findElement(By.xpath("//*[@id=\"login_button_container\"]/div/form/div[3]"));
+
+        String actualBorderColor = color.getCssValue("background-color");
+
+        String c = Color.fromString(actualBorderColor).asHex();
+
+
+        Assert.assertEquals(expectedBorderColor,c);
+
+
+
+
+
+    }
+
+}
+
+
